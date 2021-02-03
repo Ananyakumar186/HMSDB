@@ -1,0 +1,58 @@
+TO CREATE A PROCEDURE FOR SELECT :
+
+CREATE PROCEDURE singleCountry(IN countryId INT(11))
+BEGIN
+SELECT * FROM tbl_country WHERE country_id = countryId;
+END;
+
+TO CREATE A PROCEDURE FOR UPDATE:
+
+CREATE PROCEDURE updateCountry(IN countryId INT(11),countryName varchar(250))
+BEGIN
+UPDATE tbl_country SET country_name = countryName WHERE country_id = countryId;
+END;
+
+
+NOW FOR EDITING  WE HAVE TO RETRIEVE THE VALUES FROM THE TABLE AND THEN UPDATE THE VALUE
+
+<?php 
+if(isset($_GET['edit]))
+{
+     $singlsql="CALL singleCountry('".$_GET["country_id"]."')";
+     $singleresult=mysqli_query($con,$singlsql);
+     if(mysqli_num_rows($singleresult) >0){
+       while($singlerow=mysqli_fetch_rows($singleresult))
+       {
+     
+?>
+html form for edit change the form name to edit something
+and then add value to the input tag with value="<?php echo $singlerow["country_name"];?>"
+and then 
+  <input type="hidden" name="country_id" value="<?php echo $singlerow["country_id"];?>"/>
+<?php   
+       }
+       mysqli_next_result($con);
+     } 
+}
+else {
+
+?>
+html form of inserting values
+after </form>
+<?php
+}
+?>
+
+NOW AT THE LOGIN.PHP OF MINE:
+
+if(isset($_POST["update"])){
+
+    $updatecountrysql = "CALL updateCountry('".$_POST["country_id"]."','".$_POST["country_name"]."')";
+    if(mysqli_query($con,$updatecountrysql)){
+        header("Location: index.php?updated=1")
+    }
+}
+
+Male<input value="m"  type="radio" name="gen"  <?php if($res['gender']=="m"){echo "checked";}?>/>
+					Female<input <?php if($res['gender']=="f"){echo "checked";}?> type="radio" name="gen" value="f"/>
+					</td>
